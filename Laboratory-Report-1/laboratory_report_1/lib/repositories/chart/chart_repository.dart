@@ -5,43 +5,47 @@ import 'package:laboratory_report_1/repositories/chart/models/chart_data.dart';
 import 'abstract_chart_repository.dart';
 
 class ChartRepository implements AbstractChartRepository {
-  List<Point<double>> _listsToPoints(List<double> a, List<double> b) {
-    final length = min(a.length, b.length);
-    var points = <Point<double>>[];
-    for (int i = 0; i < length; i++) {
-      points.add(Point(a[i], b[i]));
+  double _f(x) => sqrt(x - 1) * (3 * x + 2) / (4 * x * x);
+
+  List<(double, double)> _differentiate(int a, int b, int N) {
+    final h = (b - a) / N;
+    var points = <(double, double)>[];
+    for (int x = a; x <= b; x++) {
+      final y = (_f(x + h) - _f(x)) / h;
+      points.add((x.toDouble(), y));
+    }
+    return points;
+  }
+
+  List<(double, double)> _calculate(int a, int b, int N) {
+    final h = (b - a) / N;
+    var points = <(double, double)>[];
+    for (int x = a; x <= b; x++) {
+      final y = (_f(x + h) - _f(x)) / h;
+      points.add((x.toDouble(), y));
     }
     return points;
   }
 
   @override
   ChartData chartData1() {
-    final points = _listsToPoints([-2, -1, 0, 1, 2], [4, 1, 0, 1, 4]);
-
+    final records = _differentiate(1, 30, 35);
+    final points = records.map((e) => Point(e.$1, e.$2)).toList();
     return ChartData(
       points: points,
-      label: 'first',
+      title: 'sqrt(x - 1) * (3x + 2) / (4 * x^2)',
+      label: 'Производная первого порядка первой точности',
     );
   }
 
   @override
-  ChartData chartData2() {
-    final points = _listsToPoints([-2, -1, 0, 1, 2], [-2, -1, 0, 1, 2]);
-
+  ChartData chartDataDefault() {
+    final records = _calculate(1, 30, 35);
+    final points = records.map((e) => Point(e.$1, e.$2)).toList();
     return ChartData(
       points: points,
-      label: 'second',
-    );
-  }
-
-  @override
-  ChartData chartData3() {
-    final points =
-        _listsToPoints([-3, -2, -1, 0, 1, 2, 3], [-27, -8, -1, 0, 1, 8, 27]);
-
-    return ChartData(
-      points: points,
-      label: 'third',
+      title: 'sqrt(x - 1) * (3x + 2) / (4 * x^2)',
+      label: 'Функция',
     );
   }
 }

@@ -17,24 +17,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     simpleCharts = [
       SimpleChart(
-        points: GetIt.I<AbstractChartRepository>().chartData1().points,
-        name: GetIt.I<AbstractChartRepository>().chartData1().label,
-      ),
-      SimpleChart(
-        points: GetIt.I<AbstractChartRepository>().chartData2().points,
-        name: GetIt.I<AbstractChartRepository>().chartData2().label,
-      ),
-      SimpleChart(
-        points: GetIt.I<AbstractChartRepository>().chartData3().points,
-        name: GetIt.I<AbstractChartRepository>().chartData3().label,
-      ),
-      SimpleChart(
-        points: GetIt.I<AbstractChartRepository>().chartData1().points,
-        name: GetIt.I<AbstractChartRepository>().chartData1().label,
-      ),
-      SimpleChart(
-        points: GetIt.I<AbstractChartRepository>().chartData2().points,
-        name: GetIt.I<AbstractChartRepository>().chartData2().label,
+        chartsData: [
+          GetIt.I<AbstractChartRepository>().chartData1(),
+          GetIt.I<AbstractChartRepository>().chartDataDefault(),
+        ],
       ),
     ];
     super.initState();
@@ -44,17 +30,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                childCount: simpleCharts.length,
-                (context, index) => simpleCharts[index],
+        child: Padding(
+          padding: const EdgeInsets.all(50),
+          child: CustomScrollView(
+            slivers: [
+              SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  childCount: simpleCharts.length,
+                  (context, index) => simpleCharts[index],
+                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
               ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
